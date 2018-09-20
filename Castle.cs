@@ -1,9 +1,9 @@
 using Castle.DynamicProxy;
 
 
-namespace InterceptionBenchmarks
+namespace ProxyBenchmarks
 {
-     public class CastleInterceptor : IInterceptor
+    public class CastleInterceptor : IInterceptor
     {
         public void Intercept(IInvocation invocation)
         {

@@ -1,11 +1,11 @@
 using Castle.DynamicProxy;
 using BenchmarkDotNet.Attributes;
-using static InterceptionBenchmarks.ProxyHelper;
+using static ProxyBenchmarks.ProxyHelper;
 
 
-namespace InterceptionBenchmarks
+namespace ProxyBenchmarks
 {
-    public class InterfaceTests
+    public class Interface
     {
         private IFoo lightInjectProxy;
         private IFoo castleProxy;

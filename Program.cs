@@ -3,35 +3,20 @@ using LightInject.Interception;
 using BenchmarkDotNet.Running;
 
 
-namespace InterceptionBenchmarks
+namespace ProxyBenchmarks
 {
     class Program
     {
         static void Main(string[] args)
-        {            
-            // var test = new InterfaceTests();
-            // test.Setup();
-            // test.UsingLinFu();
-
-
-            var summary = BenchmarkRunner.Run<InterfaceTests>();
+        {                        
+            // BenchmarkRunner.Run<Interface>();
+            // BenchmarkRunner.Run<InterfaceWithValueType>();
+            BenchmarkRunner.Run<InterfaceWithReferenceType>();
         }
     }
 
 
     
 
-    public interface IFooWithValueType
-    {
-        void DoSomething(int test);
-    }
-
-
-    public class FooWithValueType : IFooWithValueType
-    {
-        public void DoSomething(int test)
-        {
-
-        }
-    }
+   
 }

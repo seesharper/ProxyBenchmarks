@@ -1,6 +1,6 @@
 using LinFu.DynamicProxy;
 
-namespace InterceptionBenchmarks
+namespace ProxyBenchmarks
 {
     public class LinFuInterceptor<T> : IInterceptor
     {

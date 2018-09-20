@@ -1,7 +1,7 @@
 using System;
 using LightInject.Interception;
 
-namespace InterceptionBenchmarks
+namespace ProxyBenchmarks
 {
     public class LightInjectInterceptor : IInterceptor
     {
