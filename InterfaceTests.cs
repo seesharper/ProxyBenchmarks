@@ -10,6 +10,7 @@ namespace ProxyBenchmarks
         private IFoo lightInjectProxy;
         private IFoo castleProxy;
         private IFoo linFuProxy;
+        private IFoo dispatchProxy;
 
         [GlobalSetup]
         public void Setup ()
@@ -17,6 +18,7 @@ namespace ProxyBenchmarks
             lightInjectProxy = CreateLightInjectInterfaceProxy<IFoo>(new Foo());
             castleProxy = CreateCastleInterfaceProxy<IFoo>(new Foo());
             linFuProxy = CreateLinFuInterfaceProxy<IFoo>(new Foo());                       
+            dispatchProxy = CreateDispatchInterfaceProxy<IFoo>(new Foo());                       
         }
                
         private T CreateCastleInterfaceProxy<T>(T target) where T:class
@@ -41,6 +43,12 @@ namespace ProxyBenchmarks
         public void UsingLinFu()
         {
             linFuProxy.DoSomething();
+        }
+
+        [Benchmark]
+        public void UsingDispatch()
+        {
+            dispatchProxy.DoSomething();
         }
     }
 
