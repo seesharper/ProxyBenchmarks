@@ -9,6 +9,7 @@ namespace ProxyBenchmarks
         private IFooWithValueType lightInjectProxy;
         private IFooWithValueType castleProxy;
         private IFooWithValueType linFuProxy;
+        private IFooWithValueType dispatchProxy;
 
         [GlobalSetup]
         public void Setup ()
@@ -16,6 +17,7 @@ namespace ProxyBenchmarks
             lightInjectProxy = CreateLightInjectInterfaceProxy<IFooWithValueType>(new FooWithValueType());
             castleProxy = CreateCastleInterfaceProxy<IFooWithValueType>(new FooWithValueType());
             linFuProxy = CreateLinFuInterfaceProxy<IFooWithValueType>(new FooWithValueType());                       
+            dispatchProxy = CreateDispatchInterfaceProxy<IFooWithValueType>(new FooWithValueType());       
         }
 
         [Benchmark(Baseline=true)]                 
@@ -34,6 +36,12 @@ namespace ProxyBenchmarks
         public void UsingLinFu()
         {
             linFuProxy.DoSomething(42);
+        }
+
+        [Benchmark]
+        public void UsingDispatch()
+        {
+            dispatchProxy.DoSomething(42);
         }
      }
     
