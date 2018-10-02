@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
 using static ProxyBenchmarks.ProxyHelper;
 
@@ -9,17 +10,26 @@ namespace ProxyBenchmarks
         private IFooWithReferenceType castleProxy;
         private IFooWithReferenceType linFuProxy;
         private IFooWithReferenceType dispatchProxy;
+        private IFooWithReferenceType manualNoInliningProxy;
 
         [GlobalSetup]
         public void Setup ()
         {
+            manualNoInliningProxy = new ManualNoInliningRefProxy(new FooWithReferenceType());
             lightInjectProxy = CreateLightInjectInterfaceProxy<IFooWithReferenceType>(new FooWithReferenceType());
             castleProxy = CreateCastleInterfaceProxy<IFooWithReferenceType>(new FooWithReferenceType());
             linFuProxy = CreateLinFuInterfaceProxy<IFooWithReferenceType>(new FooWithReferenceType());    
             dispatchProxy = CreateDispatchInterfaceProxy<IFooWithReferenceType>(new FooWithReferenceType());                   
         }
 
+        
         [Benchmark(Baseline=true)]                 
+        public void UsingManualNoInlining()
+        {
+            manualNoInliningProxy.DoSomething("42");
+        }
+
+        [Benchmark]                 
         public void UsingLightInject()
         {
             lightInjectProxy.DoSomething("42");
@@ -52,8 +62,18 @@ namespace ProxyBenchmarks
 
     public class FooWithReferenceType : IFooWithReferenceType
     {
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public void DoSomething(string test)
         {
         }
+    }
+
+    public class ManualNoInliningRefProxy : IFooWithReferenceType
+    {   
+        private IFooWithReferenceType target;        
+        public ManualNoInliningRefProxy(IFooWithReferenceType target) => this.target = target;
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public void DoSomething(string test) => target.DoSomething(test);        
     }
 }
