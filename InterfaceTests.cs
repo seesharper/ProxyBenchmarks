@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Castle.DynamicProxy;
 using BenchmarkDotNet.Attributes;
 using static ProxyBenchmarks.ProxyHelper;
@@ -12,9 +13,12 @@ namespace ProxyBenchmarks
         private IFoo linFuProxy;
         private IFoo dispatchProxy;
 
+        private IFoo manualNoInliningProxy;
+        
         [GlobalSetup]
         public void Setup ()
         {
+            manualNoInliningProxy = new ManualNoInliningProxy(new Foo());
             lightInjectProxy = CreateLightInjectInterfaceProxy<IFoo>(new Foo());
             castleProxy = CreateCastleInterfaceProxy<IFoo>(new Foo());
             linFuProxy = CreateLinFuInterfaceProxy<IFoo>(new Foo());                       
@@ -27,7 +31,14 @@ namespace ProxyBenchmarks
             return generator.CreateInterfaceProxyWithTarget(target, new CastleInterceptor());
         }
 
+
         [Benchmark(Baseline=true)]                 
+        public void UsingManualNoInliningProxy()
+        {
+           manualNoInliningProxy.DoSomething();
+        }
+
+        [Benchmark]                 
         public void UsingLightInject()
         {
             lightInjectProxy.DoSomething();
@@ -59,8 +70,18 @@ namespace ProxyBenchmarks
 
     public class Foo : IFoo
     {
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public void DoSomething()
         {            
         }
+    }
+
+    public class ManualNoInliningProxy : IFoo
+    {   
+        private IFoo target;        
+        public ManualNoInliningProxy(IFoo target) => this.target = target;
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public void DoSomething() => target.DoSomething();        
     }
 }
